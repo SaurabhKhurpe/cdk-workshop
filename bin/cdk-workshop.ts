@@ -1,5 +1,6 @@
+#!/usr/bin/env node
 import * as cdk from 'aws-cdk-lib';
-import { PipelineStack } from '../lib/pipeline-stack';
+import { CdkWorkshopStack } from '../lib/cdk-workshop-stack';
 
 const app = new cdk.App();
-new PipelineStack(app, 'CdkWorkshopPipelineStack');
+new CdkWorkshopStack(app, 'CdkWorkshopStack');
