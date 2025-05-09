@@ -1,8 +1,8 @@
 import * as cdk from 'aws-cdk-lib';
-import { Template, Match } from 'aws-cdk-lib/assertions';
+import { Template } from 'aws-cdk-lib/assertions';
 import * as CdkWorkshop from '../lib/cdk-workshop-stack';
 
-test('SQS Queue and SNS Topic Created', () => {
+test('Lambda Function and DynamoDB Table Created', () => {
   const app = new cdk.App();
   // WHEN
   const stack = new CdkWorkshop.CdkWorkshopStack(app, 'MyTestStack');
@@ -10,8 +10,19 @@ test('SQS Queue and SNS Topic Created', () => {
 
   const template = Template.fromStack(stack);
 
-  template.hasResourceProperties('AWS::SQS::Queue', {
-    VisibilityTimeout: 300
+  // Check for Lambda function
+  template.hasResourceProperties('AWS::Lambda::Function', {
+    Runtime: 'nodejs22.x',
+    Handler: 'hello.handler',
   });
-  template.resourceCountIs('AWS::SNS::Topic', 1);
+
+  // Check for DynamoDB table
+  template.hasResourceProperties('AWS::DynamoDB::Table', {
+    KeySchema: [
+      {
+        AttributeName: 'path',
+        KeyType: 'HASH',
+      },
+    ],
+  });
 });
